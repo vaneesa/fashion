@@ -128,7 +128,7 @@ class EventoModel extends TableGateway
         return $respuesta;
     }
 
-    function updateNumeroVoluntario($total, $idEvento)
+    function updateEvento($total, $idEvento)
     {
         $flag = false;
         $respuesta = array();
@@ -136,11 +136,10 @@ class EventoModel extends TableGateway
         try {
             $sql = new Sql($this->dbAdapter);
             $update = $sql->update();
-            $update->table('simulacrogrupo');
+            $update->table($this->table);
             
             $array = array(
-                'numeroParticipantes' => 1,
-                'numeroParticipantes' => $total["nuevosParticipantes"] + 1
+                'numeroParticipantes' => $total["totalParticipantes"] + 1
             );
             
             $update->set($array);

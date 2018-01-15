@@ -81,7 +81,7 @@ return array(
             'Application\Controller\Index' => Controller\IndexController::class,
             'Application\Controller\VoluntarioCreador' => Controller\VoluntarioCreadorController::class,
             'Application\Controller\Mensaje' => Controller\MensajeController::class,
-            'Application\Controller\VoluntarioSimulacro' => Controller\VoluntarioSimulacroController::class,
+            'Application\Controller\UsuarioEvento' => Controller\UsuarioEventoController::class,
             'Application\Controller\RecuperaFolio' => Controller\RecuperaFolioController::class
         ),
     ),
