@@ -1,10 +1,12 @@
 <?php
 namespace Application\Model;
 
+use Zend\Db\TableGateway\TableGateway;
+use Zend\Db\TableGateway\Feature;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
-use Zend\Db\TableGateway\Feature;
-use Zend\Db\TableGateway\TableGateway;
+use Zend\Db\Sql\Update;
+use Zend\Filter\Null;
 
 class RecuperarFolioModel extends TableGateway
 {

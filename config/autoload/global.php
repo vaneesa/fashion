@@ -15,7 +15,7 @@ return array(
 	'db' => array(
 		'driver'         => 'Pdo',
 		//'dsn'            => 'mysql:dbname=c0dsrrllrcpr;host=desarrollo.recupera.net',
-		'dsn'            => 'mysql:dbname=voluntario;host=localhost',
+		'dsn'            => 'mysql:dbname=fashion;host=localhost',
 		'driver_options' => array(
 				PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
 		),

@@ -17,10 +17,7 @@ class RecuperaFolioController extends AbstractActionController
         return $this->recuperaFolioService = new RecuperarFolioService();
     }
     
-    public function getAll(){
-        $recuperaFolio = $this->getRecuperaFolioService()->getAll();
-        
-    }
+    
     public function recuperaCorreoAction(){
         
         $request = $this->getRequest();

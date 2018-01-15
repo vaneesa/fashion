@@ -29,7 +29,7 @@ return array(
             'application' => array(
                 'type'    => 'Literal',
                 'options' => array(
-                    'route'    => '/voluntario',
+                    'route'    => '/fashion',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Application\Controller',
                         'controller'    => 'Index',
@@ -75,11 +75,11 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
+            'Application\Controller\Usuario' => Controller\UsuarioController::class,
+            'Application\Controller\Evento' => Controller\EventoController::class,
+            
             'Application\Controller\Index' => Controller\IndexController::class,
-            'Application\Controller\Voluntario' => Controller\VoluntarioController::class,
-            'Application\Controller\Prueba' => Controller\PruebaController::class,
             'Application\Controller\VoluntarioCreador' => Controller\VoluntarioCreadorController::class,
-            'Application\Controller\SimulacroGrupo' => Controller\SimulacroGrupoController::class,
             'Application\Controller\Mensaje' => Controller\MensajeController::class,
             'Application\Controller\VoluntarioSimulacro' => Controller\VoluntarioSimulacroController::class,
             'Application\Controller\RecuperaFolio' => Controller\RecuperaFolioController::class

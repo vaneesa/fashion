@@ -6,47 +6,43 @@ use Zend\Db\TableGateway\Feature;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
 
-class SimulacroGrupoModel extends TableGateway
+class EventoModel extends TableGateway
 {
 
     private $dbAdapter;
 
-    public function __construct()
+    function __construct()
     {
         $this->dbAdapter = \Zend\Db\TableGateway\Feature\GlobalAdapterFeature::getStaticAdapter();
-        $this->table = 'simulacrogrupo';
+        $this->table = 'evento';
         $this->featureSet = new Feature\FeatureSet();
         $this->featureSet->addFeature(new Feature\GlobalAdapterFeature());
         $this->initialize();
     }
 
-    /**
-     * OBTEMOS TODOS los sismos
-     */
-    public function getAll()
+    function getAll()
     {
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select();
         $select->columns(array(
             'id',
-            'ubicacion',
+            'nombreEvento',
+            'direccion',
             'fecha',
-            'hora',
-            'voluntario',
-            'idVoluntarioCreador'
+            'numeroLugares',
+            'numeroParticipantes',
+            'hora'
         ))->from(array(
             's' => $this->table
         ));
         $selectString = $sql->getSqlStringForSqlObject($select);
-        // print_r($selectString); exit;
         $execute = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
         $result = $execute->toArray();
-        // echo "<pre>"; print_r($result); exit;
         
         return $result;
     }
 
-    public function addSimulacroGrupo($dataSimulacroGrupo)
+    function addEvento($dataSimulacroGrupo)
     {
         $flag = false;
         $respuesta = array();
@@ -58,17 +54,13 @@ class SimulacroGrupoModel extends TableGateway
             $insertar = $sql->insert('simulacrogrupo');
             
             $array = array(
-                
-                'ubicacion' => $dataSimulacroGrupo["ubicacion"],
-                'latitud' => $dataSimulacroGrupo["latitud"],
-                'longitud' => $dataSimulacroGrupo["longitud"],
+                'nombreEvento' => $dataSimulacroGrupo["nombreEvento"],
+                'direccion' => $dataSimulacroGrupo["direccion"],
                 'fecha' => $dataSimulacroGrupo["fecha"],
-                'hora' => $dataSimulacroGrupo["hora"],
-                'voluntario' => 1,
-                'idVoluntarioCreador' => $dataSimulacroGrupo["idVoluntarioCreador"]
+                'numeroLugares' => $dataSimulacroGrupo["numeroLugares"],
+                'numeroParticipantes' => 1,
+                'hora' => $dataSimulacroGrupo["hora"]
             );
-            // print_r($array);
-            // exit;
             $insertar->values($array);
             
             $selectString = $sql->getSqlStringForSqlObject($insertar);
@@ -81,17 +73,65 @@ class SimulacroGrupoModel extends TableGateway
             // echo "Second Message: " . $e->getMessage() . "<br/>";
         }
         $respuesta['status'] = $flag;
-        
-        // print_r($results);
-        
         return $respuesta;
     }
 
-    public function updateNumeroVoluntario($total, $idSimulacro)
+    function buscarDetalles($dataEvento)
+    {
+        $where = "";
+        
+        if ($dataEvento["direccion"] != null && ! empty($dataEvento["direccion"])) {
+            
+            if ($dataEvento["fecha"] != null && ! empty($dataEvento["fecha"])) {
+                $where = "where direccion = '" . $dataEvento['direccion'] . "' and fecha like '" . $dataEvento["fecha"] . "%'";
+            } else {
+                $where = "where direccion = '" . $dataEvento['direccion'] . "'";
+            }
+        } else {
+            if ($dataEvento["fecha"] != null && ! empty($dataEvento["fecha"])) {
+                $where = "where fecha like '" . $dataEvento["fecha"] . "%'";
+            }
+        }
+        
+        $query = "select * FROM evento " . $where;
+        
+        $consulta = $this->dbAdapter->query($query, Adapter::QUERY_MODE_EXECUTE);
+        
+        $res = $consulta->toArray();
+        
+        return ($res != null && count($res) > 0) ? $res[0] : $res;
+    }
+
+    function eliminarEvento($dataEvento)
     {
         $flag = false;
         $respuesta = array();
         
+        try {
+            $sql = new Sql($this->dbAdapter);
+            $delete = $sql->delete($this->table);
+            $delete->where(array(
+                'id' => $dataEvento["id"]
+            ));
+            
+            $selectString = $sql->getSqlStringForSqlObject($delete);
+            $results = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+            
+            $flag = true;
+        } catch (\PDOException $e) {
+            // echo "First Message " . $e->getMessage() . "<br/>";
+            $flag = false;
+        } catch (\Exception $e) {
+            // echo "Second Message: " . $e->getMessage() . "<br/>";
+        }
+        $respuesta['status'] = $flag;
+        return $respuesta;
+    }
+
+    function updateNumeroVoluntario($total, $idEvento)
+    {
+        $flag = false;
+        $respuesta = array();
         
         try {
             $sql = new Sql($this->dbAdapter);
@@ -99,13 +139,13 @@ class SimulacroGrupoModel extends TableGateway
             $update->table('simulacrogrupo');
             
             $array = array(
-                
-                'voluntario' => $total[0]["totalVoluntario"] + 1
+                'numeroParticipantes' => 1,
+                'numeroParticipantes' => $total["nuevosParticipantes"] + 1
             );
             
             $update->set($array);
             $update->where(array(
-                'id' => $idSimulacro
+                'id' => $idEvento
             ));
             
             $selectString = $sql->getSqlStringForSqlObject($update);
@@ -120,59 +160,5 @@ class SimulacroGrupoModel extends TableGateway
         $respuesta['status'] = $flag;
         return $respuesta;
     }
-
-    public function buscarDetalles($decodePostData)
-    {
-        $sql = new Sql($this->dbAdapter);
-        $select = $sql->select();
-        
-        $select->from(array(
-            't1' => 'simulacrogrupo'
-        ), array())->where(array(
-            'idVoluntarioCreador' => $decodePostData['id']
-        ));
-        
-        // print_r($result);
-        // exit;
-        $selectString = $sql->getSqlStringForSqlObject($select);
-        $execute = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
-        $result = $execute->toArray();
-        
-        // echo "<pre>"; print_r($result); exit;
-        
-        // print_r($result);
-        // exit;
-        
-        return $result;
-    }
-    
-    public function eliminarSimulacro($dataPartSimulacro)
-    {
-        $flag = false;
-        $respuesta = array();
-        
-        
-        try {
-            //$consulta=$this->dbAdapter->query("DELETE FROM simulacrogrupo where idSismo = '" . $dataPartSismo["idSismo"]."'" ,Adapter::QUERY_MODE_EXECUTE);
-            $sql = new Sql($this->dbAdapter);
-            $delete = $sql->delete('simulacrogrupo');
-            $delete->where(array('id' => $dataPartSimulacro["idSimulacro"]));
-            
-            $selectString = $sql->getSqlStringForSqlObject($delete);
-            $results = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
-          
-            $flag = true;
-            
-        } catch (\PDOException $e) {
-            // echo "First Message " . $e->getMessage() . "<br/>";
-            $flag = false;
-        } catch (\Exception $e) {
-            // echo "Second Message: " . $e->getMessage() . "<br/>";
-        }
-        $respuesta['status'] = $flag;
-        return $respuesta;
-    }
-    
-    
 }
 ?>
