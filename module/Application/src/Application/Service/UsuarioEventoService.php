@@ -37,7 +37,7 @@ class UsuarioEventoService
 //             $usuariosEventos = $this->getUsuarioEventoModel()->addUsuarioEvento($dataUsuarioEvento);
             $buscaTotalParticipantes = $this->getUsuarioEventoModel()->numeroVoluntario($dataUsuarioEvento["idEvento"]);
             print_r($buscaTotalParticipantes); 
-            $actualizaParticipates = $this->getEventoModel()->updateEvento($buscaTotalParticipantes, $dataUsuarioEvento["idEvento"]);
+            $actualizaParticipates = $this->getEventoModel()->updateEvent($buscaTotalParticipantes, $dataUsuarioEvento["idEvento"]);
         } else {
             $usuariosEventos = "Ya estas registrado en este evento ";
         }

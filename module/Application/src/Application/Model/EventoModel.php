@@ -42,7 +42,7 @@ class EventoModel extends TableGateway
         return $result;
     }
 
-    function addEvento($dataSimulacroGrupo)
+    function addEvent($dataEvent)
     {
         $flag = false;
         $respuesta = array();
@@ -51,15 +51,15 @@ class EventoModel extends TableGateway
             
             $sql = new Sql($this->dbAdapter);
             
-            $insertar = $sql->insert('simulacrogrupo');
+            $insertar = $sql->insert($this->table);
             
             $array = array(
-                'nombreEvento' => $dataSimulacroGrupo["nombreEvento"],
-                'direccion' => $dataSimulacroGrupo["direccion"],
-                'fecha' => $dataSimulacroGrupo["fecha"],
-                'numeroLugares' => $dataSimulacroGrupo["numeroLugares"],
+                'nombreEvento' => $dataEvent["nombreEvento"],
+                'direccion' => $dataEvent["direccion"],
+                'fecha' => $dataEvent["fecha"],
+                'numeroLugares' => $dataEvent["numeroLugares"],
                 'numeroParticipantes' => 1,
-                'hora' => $dataSimulacroGrupo["hora"]
+                'hora' => $dataEvent["hora"]
             );
             $insertar->values($array);
             
@@ -76,20 +76,20 @@ class EventoModel extends TableGateway
         return $respuesta;
     }
 
-    function buscarDetalles($dataEvento)
+    function searchEvent($dataEvent)
     {
         $where = "";
         
-        if ($dataEvento["direccion"] != null && ! empty($dataEvento["direccion"])) {
+        if ($dataEvent["direccion"] != null && ! empty($dataEvent["direccion"])) {
             
-            if ($dataEvento["fecha"] != null && ! empty($dataEvento["fecha"])) {
-                $where = "where direccion = '" . $dataEvento['direccion'] . "' and fecha like '" . $dataEvento["fecha"] . "%'";
+            if ($dataEvent["fecha"] != null && ! empty($dataEvent["fecha"])) {
+                $where = "where direccion = '" . $dataEvent['direccion'] . "' and fecha like '" . $dataEvent["fecha"] . "%'";
             } else {
-                $where = "where direccion = '" . $dataEvento['direccion'] . "'";
+                $where = "where direccion = '" . $dataEvent['direccion'] . "'";
             }
         } else {
-            if ($dataEvento["fecha"] != null && ! empty($dataEvento["fecha"])) {
-                $where = "where fecha like '" . $dataEvento["fecha"] . "%'";
+            if ($dataEvent["fecha"] != null && ! empty($dataEvent["fecha"])) {
+                $where = "where fecha like '" . $dataEvent["fecha"] . "%'";
             }
         }
         
@@ -102,7 +102,7 @@ class EventoModel extends TableGateway
         return ($res != null && count($res) > 0) ? $res[0] : $res;
     }
 
-    function eliminarEvento($dataEvento)
+    function deleteEvent($dataEvent)
     {
         $flag = false;
         $respuesta = array();
@@ -111,7 +111,7 @@ class EventoModel extends TableGateway
             $sql = new Sql($this->dbAdapter);
             $delete = $sql->delete($this->table);
             $delete->where(array(
-                'id' => $dataEvento["id"]
+                'id' => $dataEvent["id"]
             ));
             
             $selectString = $sql->getSqlStringForSqlObject($delete);
@@ -127,8 +127,45 @@ class EventoModel extends TableGateway
         $respuesta['status'] = $flag;
         return $respuesta;
     }
+    
+    function updateEvent($dataEvent)
+    {
+        $flag = false;
+        $respuesta = array();
+        
+        try {
+            $sql = new Sql($this->dbAdapter);
+            $update = $sql->update();
+            $update->table($this->table);
+            
+            $array = array(
+                'nombreEvento' => $dataEvent["nombreEvento"],
+                'direccion' => $dataEvent["direccion"],
+                'fecha' => $dataEvent["fecha"],
+                'numeroLugares' => $dataEvent["numeroLugares"],
+                'numeroParticipantes' => $dataEvent["numeroParticipantes"],
+                'hora' => $dataEvent["hora"]
+            );
+            
+            $update->set($array);
+            $update->where(array(
+                'id' => $dataEvent["id"]
+            ));
+            
+            $selectString = $sql->getSqlStringForSqlObject($update);
+            $results = $this->dbAdapter->query($selectString, Adapter::QUERY_MODE_EXECUTE);
+            $flag = true;
+        } catch (\PDOException $e) {
+            // echo "First Message " . $e->getMessage() . "<br/>";
+            $flag = false;
+        } catch (\Exception $e) {
+            // echo "Second Message: " . $e->getMessage() . "<br/>";
+        }
+        $respuesta['status'] = $flag;
+        return $respuesta;
+    }
 
-    function updateEvento($total, $idEvento)
+    function updateParticipants($total, $idEvent)
     {
         $flag = false;
         $respuesta = array();
@@ -144,7 +181,7 @@ class EventoModel extends TableGateway
             
             $update->set($array);
             $update->where(array(
-                'id' => $idEvento
+                'id' => $idEvent
             ));
             
             $selectString = $sql->getSqlStringForSqlObject($update);

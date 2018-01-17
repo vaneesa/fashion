@@ -6,7 +6,7 @@ use Zend\Db\TableGateway\Feature;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
 
-class VoluntarioCreadorModel extends TableGateway
+class ModelsModel extends TableGateway
 {
 
     private $dbAdapter;
@@ -14,25 +14,21 @@ class VoluntarioCreadorModel extends TableGateway
     public function __construct()
     {
         $this->dbAdapter = \Zend\Db\TableGateway\Feature\GlobalAdapterFeature::getStaticAdapter();
-        $this->table = 'voluntarioCreador';
+        $this->table = 'modelo';
         $this->featureSet = new Feature\FeatureSet();
         $this->featureSet->addFeature(new Feature\GlobalAdapterFeature());
         $this->initialize();
     }
 
-    /**
-     * OBTEMOS TODOS los imeis
-     */
     public function getAll()
     {
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select();
         $select->columns(array(
-            'id',
-            'folio',
-            'nombre',
-            'telefono',
-            'correo'
+                'id',
+                'descripcion',
+                'imagen',
+                'id_evento'
         ))->from(array(
             'v' => $this->table
         ));
@@ -50,7 +46,7 @@ class VoluntarioCreadorModel extends TableGateway
         
         // print_r($folioNuevo);
         // $consulta=$this->dbAdapter->query("select id , folio FROM voluntarioCreador where nombre = '" . $dataUser['nombre']."' and correo = '".$dataUser['correo']. "'" ,Adapter::QUERY_MODE_EXECUTE);
-        $consulta = $this->dbAdapter->query("select id , folio , nombre, correo FROM voluntarioCreador where folio = '" . $folioNuevo . "'", Adapter::QUERY_MODE_EXECUTE);
+        $consulta = $this->dbAdapter->query("select * correo FROM modelo where folio = '" . $folioNuevo . "'", Adapter::QUERY_MODE_EXECUTE);
         
         $res = $consulta->toArray();
         // echo "res ";
@@ -59,43 +55,21 @@ class VoluntarioCreadorModel extends TableGateway
         return $res;
     }
 
-    public function maxFolio($folioNuevo)
-    {
-        
-        // $consulta=$this->dbAdapter->query("select id , folio FROM voluntarioCreador where nombre = '" . $dataUser['nombre']."' and correo = '".$dataUser['correo']. "'" ,Adapter::QUERY_MODE_EXECUTE);
-        $consulta = $this->dbAdapter->query("select max(folio) as maxFolio FROM voluntarioCreador where folio like '" . $folioNuevo . "%'", Adapter::QUERY_MODE_EXECUTE);
-        
-        $res = $consulta->toArray();
-        return $res;
-    }
+    
 
-    public function existeCorreo($dataUser)
-    {
-        // $consulta=$this->dbAdapter->query("select id , folio FROM voluntarioCreador where nombre = '" . $dataUser['nombre']."' and correo = '".$dataUser['correo']. "'" ,Adapter::QUERY_MODE_EXECUTE);
-        $consulta = $this->dbAdapter->query("select id , folio, correo FROM voluntarioCreador where correo = '" . $dataUser['correo'] . "'", Adapter::QUERY_MODE_EXECUTE);
-        
-        $res = $consulta->toArray();
-        // echo "existe correo";
-        // print_r($res);
-        
-        return $res;
-    }
-
-    public function addVolCreador($dataVolCreador, $folioNuevo)
+    public function addVolModelo($dataModelo)
     {
         $flag = false;
         $respuesta = array();
         
         try {
             $sql = new Sql($this->dbAdapter);
-            $insertar = $sql->insert('voluntarioCreador');
+            $insertar = $sql->insert($this->table);
             
             $array = array(
-                
-                'folio' => $folioNuevo,
-                'nombre' => $dataVolCreador["nombre"],
-                'telefono' => $dataVolCreador["telefono"],
-                'correo' => $dataVolCreador["correo"]
+                'descripcion'=> $dataModelo['descripcion'],
+                'imagen'=> $dataModelo['imagen'],
+                'id_evento'=> $dataModelo['id_evento']
             );
             
             $insertar->values($array);
@@ -110,15 +84,13 @@ class VoluntarioCreadorModel extends TableGateway
             // echo "Second Message: " . $e->getMessage() . "<br/>";
         }
         $respuesta['status'] = $flag;
-        $respuesta['folio'] = $folioNuevo;
-        
+
         return $respuesta;
     }
 
-    public function updateVoluntarioCreador($volCreador, $folioNuevo)
+    public function updateModelo($dataModelo)
     {
         
-        // print_r($usuario[0]['id']);
         $flag = false;
         $respuesta = array();
         
@@ -128,13 +100,14 @@ class VoluntarioCreadorModel extends TableGateway
             $update->table('voluntarioCreador');
             
             $array = array(
-                
-                'folio' => $folioNuevo
+                'descripcion'=> $dataModelo['descripcion'],
+                'imagen'=> $dataModelo['imagen'],
+                'id_evento'=> $dataModelo['id_evento']
             );
             
             $update->set($array);
             $update->where(array(
-                'id' => $volCreador[0]['id']
+                'id' => $dataModelo[0]['id']
             ));
             
             $selectString = $sql->getSqlStringForSqlObject($update);
@@ -146,9 +119,31 @@ class VoluntarioCreadorModel extends TableGateway
             // echo "Second Message: " . $e->getMessage() . "<br/>";
         }
         $respuesta['status'] = $flag;
-        // $respuesta['folio'] = $folioNuevo;
         return $respuesta;
     }
+    
+    
+//     public function maxFolio($folioNuevo)
+//     {
+        
+//         // $consulta=$this->dbAdapter->query("select id , folio FROM voluntarioCreador where nombre = '" . $dataUser['nombre']."' and correo = '".$dataUser['correo']. "'" ,Adapter::QUERY_MODE_EXECUTE);
+//         $consulta = $this->dbAdapter->query("select max(folio) as maxFolio FROM voluntarioCreador where folio like '" . $folioNuevo . "%'", Adapter::QUERY_MODE_EXECUTE);
+        
+//         $res = $consulta->toArray();
+//         return $res;
+//     }
+    
+//     public function existeCorreo($dataUser)
+//     {
+//         $consulta = $this->dbAdapter->query("select id , folio, correo FROM voluntarioCreador where correo = '" . $dataUser['correo'] . "'", Adapter::QUERY_MODE_EXECUTE);
+        
+//         $res = $consulta->toArray();
+//         // echo "existe correo";
+//         // print_r($res);
+        
+//         return $res;
+//     }
+
 }
 
 ?>

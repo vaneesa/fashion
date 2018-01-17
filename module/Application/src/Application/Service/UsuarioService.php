@@ -1,39 +1,57 @@
 <?php
 namespace Application\Service;
 
-use Application\Model\UsuarioModel;
+use Application\Model\UserModel;
 
 class UsuarioService
 {
 
-    private $usuarioModel;
+    private $userModel;
 
-    private function getVoluntariosModel()
+    private function getUserModel()
     {
-        return $this->usuarioModel = new UsuarioModel();
+        return $this->userModel = new UserModel();
     }
 
-    /**
-     * Obtenermos todos los participantes
-     */
     function getAll()
     {
-       return $this->getVoluntariosModel()->getAll();
-        
+        return $this->getUserModel()->getAll();
     }
 
-    function addVoluntario($dataUsuario)
+    function addUser($dataUser)
     {
         $respuesta = array();
-        $usuario = $this->getVoluntariosModel()->existe($dataUsuario);
+        $usuario = $this->getUserModel()->existe($dataUser);
         
         if (count($usuario) == 0) {
-            $respuesta = $this->getVoluntariosModel()->addUsuario($dataUsuario);
+            $respuesta = $this->getUserModel()->addUser($dataUser);
             $respuesta["mensaje"] = "Usuario Registrado";
         } else {
-            $respuesta["status"] = false; 
+            $respuesta["status"] = false;
             $respuesta["mensaje"] = "Ya existe usuario asciado a la cuenta de correo : " . $usuario['correo'];
         }
+        return $respuesta;
+    }
+
+    function updateUser($dataUser)
+    {
+        $respuesta = array();
+        $usuario = $this->getUserModel()->existe($dataUser);
+        
+        if (count($usuario) != 0) {
+            $respuesta = $this->getUserModel()->updateUser($dataUser);
+            $respuesta["mensaje"] = "Datos Actualzizados";
+        } else {
+            $respuesta["status"] = false;
+            $respuesta["mensaje"] = "No encontro usuario " . $dataUser['correo'];
+        }
+        return $respuesta;
+    }
+
+    function deleteUser($dataUser)
+    {
+        $respuesta = $this->getUserModel()->deleteUser($dataUser);
+        
         return $respuesta;
     }
 }

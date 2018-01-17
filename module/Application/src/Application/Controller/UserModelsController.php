@@ -1,10 +1,9 @@
 <?php
 namespace Application\Controller;
+use Application\Service\UserModelsService;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Application\Service\MensajeService;
 
-class MensajeController extends AbstractActionController
+class UserModelsController extends AbstractActionController
 {
 
     private $mensajeService;
@@ -14,10 +13,10 @@ class MensajeController extends AbstractActionController
      */
     public function getMensajeService()
     {
-        return $this->mensajeService = new MensajeService();
+        return $this->mensajeService = new UserModelsService();
     }
 
-    public function listaAction(){
+    public function listAction(){
 
         $mensaje = $this->getMensajeService()->getAll();
         $response = $this->getResponse()->setContent(\Zend\Json\Json::encode(array(
@@ -28,7 +27,7 @@ class MensajeController extends AbstractActionController
         //exit;
     }
 
-    public function addMensajeAction(){
+    public function addUserModelAction(){
 
 
         $request = $this->getRequest();
@@ -37,7 +36,7 @@ class MensajeController extends AbstractActionController
             $decodePostData = json_decode($postData, true);
 
             
-            $result = $this->getMensajeService()->addMensaje($decodePostData);
+            $result = $this->getMensajeService()->addUserModels($decodePostData);
                    
             $response = $this->getResponse()->setContent(\Zend\Json\Json::encode(array(
                 "response" => $result,

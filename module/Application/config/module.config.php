@@ -75,13 +75,14 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Usuario' => Controller\UsuarioController::class,
-            'Application\Controller\Evento' => Controller\EventoController::class,
+            'Application\Controller\User' => Controller\UserController::class,
+            'Application\Controller\Event' => Controller\EventoController::class,
+            'Application\Controller\UserEvento' => Controller\UserEventController::class,
+            'Application\Controller\Models' => Controller\ModelsController::class,
+            'Application\Controller\UserModels' => Controller\UserModelsController::class,
             
             'Application\Controller\Index' => Controller\IndexController::class,
-            'Application\Controller\VoluntarioCreador' => Controller\VoluntarioCreadorController::class,
-            'Application\Controller\Mensaje' => Controller\MensajeController::class,
-            'Application\Controller\UsuarioEvento' => Controller\UsuarioEventoController::class,
+            
             'Application\Controller\RecuperaFolio' => Controller\RecuperaFolioController::class
         ),
     ),

@@ -1,79 +1,37 @@
 <?php
-/**
- * @autor JuanMS
- * Controlador para las peticiones de sismos
- */
 namespace Application\Controller;
 
-use Application\Service\EventoService;
+use Application\Service\UsuarioService;
 use Zend\Mvc\Controller\AbstractActionController;
 
-class EventoController extends AbstractActionController
+class UserController extends AbstractActionController
 {
 
-    private $eventoService;
+    private $usuarioService;
 
-    function getEventoService()
+    function getUsuarioService()
     {
-        return $this->eventoService = new EventoService();
+        return $this->usuarioService = new UsuarioService();
     }
 
-    function listAction()
+    function listaAction()
     {
-        $voluntarios = $this->getEventoService()->getAll();
+        $usuarios = $this->getUsuarioService()->getAll();
         $response = $this->getResponse()->setContent(\Zend\Json\Json::encode(array(
-            "response" => $voluntarios
+            "response" => $usuarios
         )));
         
         return $response;
     }
 
-    function addEventAction()
-    {
-        $request = $this->getRequest();
-        $response;
-        
-        if ($request->isPost()) {
-            $postData = $this->getRequest()->getContent();
-            $decodePostData = json_decode($postData, true);
-            
-            $result = $this->getEventoService()->addEvent($decodePostData);
-            
-            $response = $this->getResponse()->setContent(\Zend\Json\Json::encode(array(
-                "response" => $result
-            )));
-            
-            
-        }
-        
-        return $response;
-        
-    }
-
-    function searchEventAction()
+    function addUserAction()
     {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $postData = $this->getRequest()->getContent();
             $decodePostData = json_decode($postData, true);
             
-            $result = $this->getEventoService()->searchEvent($decodePostData);
-            
-            $response = $this->getResponse()->setContent(\Zend\Json\Json::encode(array(
-                "response" => $result
-            )));
-            return $response;
-        }
-    }
-
-    function deleteEventAction()
-    {
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $postData = $this->getRequest()->getContent();
-            $decodePostData = json_decode($postData, true);
-            
-            $result = $this->getEventoService()->deleteEvent($decodePostData);
+            $result = $this->getUsuarioService()->addUser($decodePostData);
             
             $response = $this->getResponse()->setContent(\Zend\Json\Json::encode(array(
                 "response" => $result
@@ -82,14 +40,15 @@ class EventoController extends AbstractActionController
         }
     }
     
-    function updateEventAction()
+    
+    function updateUserAction()
     {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $postData = $this->getRequest()->getContent();
             $decodePostData = json_decode($postData, true);
             
-            $result = $this->getEventoService()->updateEvent($decodePostData);
+            $result = $this->getUsuarioService()->updateUser($decodePostData);
             
             $response = $this->getResponse()->setContent(\Zend\Json\Json::encode(array(
                 "response" => $result
@@ -97,5 +56,21 @@ class EventoController extends AbstractActionController
             return $response;
         }
     }
-
+    
+    function deleteUserAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $postData = $this->getRequest()->getContent();
+            $decodePostData = json_decode($postData, true);
+            
+            $result = $this->getUsuarioService()->deleteUser($decodePostData);
+            
+            $response = $this->getResponse()->setContent(\Zend\Json\Json::encode(array(
+                "response" => $result
+            )));
+            return $response;
+        }
+    }
 }
+?>

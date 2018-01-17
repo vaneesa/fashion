@@ -18,13 +18,13 @@ class EventoService
         return $this->getEventoModel()->getAll();
     }
 
-    function addSimulacro($dataEvento)
+    function addEvent($dataEvento)
     {
         $respuesta = array();
         $evento = $this->getEventoModel()->buscarDetalles($dataEvento);
         
         if (count($evento) == 0) {
-            $respuesta = $this->getEventoModel()->addEvento($dataEvento);
+            $respuesta = $this->getEventoModel()->addEvent($dataEvento);
             $respuesta["mensaje"] = "Evento Registrado";
         } else {
             $respuesta["status"] = false;
@@ -34,14 +34,19 @@ class EventoService
         return $respuesta;
     }
 
-    function buscarDetalles($decodePostData)
+    function searchEvent($decodePostData)
     {
-        return $this->getEventoModel()->buscarDetalles($decodePostData);
+        return $this->getEventoModel()->searchEvent($decodePostData);
     }
 
-    function eliminarEvento($decodePostData)
+    function deleteEvent($decodePostData)
     {
-        return $this->getEventoModel()->eliminarEvento($decodePostData);
+        return $this->getEventoModel()->deleteEvent($decodePostData);
+    }
+    
+    function updateEvent($decodePostData)
+    {
+        return $this->getEventoModel()->updateEvent($decodePostData);
     }
 }
 ?>

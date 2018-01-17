@@ -6,14 +6,14 @@ use Zend\Db\TableGateway\Feature;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
 
-class MensajeModel extends TableGateway
+class UserModelModel extends TableGateway
 {
 	private $dbAdapter;
 
 	public function __construct()
 	{
 		$this->dbAdapter  = \Zend\Db\TableGateway\Feature\GlobalAdapterFeature::getStaticAdapter();
-    	$this->table      = 'mensajes';
+    	$this->table      = 'usuario_modelo';
        	$this->featureSet = new Feature\FeatureSet();
      	$this->featureSet->addFeature(new Feature\GlobalAdapterFeature());
     	$this->initialize();
@@ -27,7 +27,7 @@ class MensajeModel extends TableGateway
 		$sql = new Sql($this->dbAdapter);
 		$select = $sql->select();
 		$select
-			->columns(array('id', 'mensajeCreador' , 'idSimulacrogrupo'))
+		->columns(array('id_usuario', 'id_modelo', 'calf_arriba', 'calf_media', 'calif_bajo'))
 			->from(array('m' => $this->table));
 		$selectString = $sql->getSqlStringForSqlObject($select);
 		//print_r($selectString); exit;
@@ -38,17 +38,20 @@ class MensajeModel extends TableGateway
 		return $result;
 	}
 	
-	public function addMensaje($dataMensaje){
+	public function addUserModels($dataMensaje){
 		
 	    $flag = false;
 	    $respuesta = array();
 	    try {
 	        $sql = new Sql($this->dbAdapter);
-	        $insertar = $sql->insert('mensajes');
+	        $insertar = $sql->insert($this->table);
 	        $array=array(
 	            
-	            'mensajeCreador'=>$dataMensaje["mensajeCreador"],
-	            'idSismogrupo'=>$dataMensaje["idSismogrupo"]
+	            'id_usuario' =>$dataMensaje["id_usuario"],
+	            'id_modelo' =>$dataMensaje["id_modelo"],
+	            'calf_arriba' =>$dataMensaje["calf_arriba"],
+	            'calf_media' =>$dataMensaje["calf_media"],
+	            'calif_bajo' =>$dataMensaje["calif_bajo"]
 	        );
 	        //		print_r($array);
 	        //		exit;

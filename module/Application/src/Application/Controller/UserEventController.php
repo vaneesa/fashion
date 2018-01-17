@@ -3,7 +3,7 @@ namespace Application\Controller;
 use Application\Service\UsuarioEventoService;
 use Zend\Mvc\Controller\AbstractActionController;
 
-class UsuarioEventoController extends AbstractActionController
+class UserEventController extends AbstractActionController
 {
 
     private $voluntarioSimulacroService;
@@ -16,7 +16,7 @@ class UsuarioEventoController extends AbstractActionController
         return $this->voluntarioSimulacroService = new UsuarioEventoService();
     }
 
-    public function listaAction(){
+    public function listAction(){
 
         $voluntariosSimulacro = $this->getUsuarioEventoService()->getAll();
         $response = $this->getResponse()->setContent(\Zend\Json\Json::encode(array(
@@ -26,7 +26,7 @@ class UsuarioEventoController extends AbstractActionController
         return $response;
     }
 
-    public function addUsuarioEventoAction(){
+    public function addUserEventAction(){
 
 
         $request = $this->getRequest();
