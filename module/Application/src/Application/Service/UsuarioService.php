@@ -31,6 +31,8 @@ class UsuarioService
             $respuesta["mensaje"] = "Ya existe usuario asciado a la cuenta de correo : " . $usuario['correo'];
         }
         return $respuesta;
+        
+        exit;
     }
 
     function updateUser($dataUser)

@@ -62,8 +62,8 @@ class UserModel extends TableGateway
             $insertar = $sql->insert($this->table);
             $array = array(
                 'nombre' => $dataUser["nombre"],
-                'apellidoP' => $dataUser["apellidoP"],
-                'apellidoM' => $dataUser["apellidoM"],
+//                 'apellidoP' => $dataUser["apellidoP"],
+//                 'apellidoM' => $dataUser["apellidoM"],
                 'correo' => $dataUser["correo"],
                 'telefono' => $dataUser["telefono"]
             );

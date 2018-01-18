@@ -21,7 +21,7 @@ class EventoService
     function addEvent($dataEvento)
     {
         $respuesta = array();
-        $evento = $this->getEventoModel()->buscarDetalles($dataEvento);
+        $evento = $this->getEventoModel()->searchEvent($dataEvento);
         
         if (count($evento) == 0) {
             $respuesta = $this->getEventoModel()->addEvent($dataEvento);

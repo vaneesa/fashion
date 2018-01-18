@@ -58,8 +58,8 @@ class EventoModel extends TableGateway
                 'direccion' => $dataEvent["direccion"],
                 'fecha' => $dataEvent["fecha"],
                 'numeroLugares' => $dataEvent["numeroLugares"],
-                'numeroParticipantes' => 1,
-                'hora' => $dataEvent["hora"]
+                'numeroParticipantes' => 1
+//                 'hora' => $dataEvent["hora"]
             );
             $insertar->values($array);
             
